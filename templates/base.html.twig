@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}DVM!{% endblock %}</title>
+        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
+        {% block stylesheets %} <link rel="stylesheet" href="{{ asset('css/style.css')}}"> {% endblock %}
+
+        {% block javascripts %}
+            <script src="{{ asset('js/javascript.js') }}"></script>
+            <script src="{{ asset('js/conducteur.js') }}"></script>
+            <script src="{{ asset('js/vehicule.js') }}"></script>
+            <script src="{{ asset('js/equipement.js')}}"></script>
+        {% endblock %}
+    </head>
+    <body>
+        <header>
+            <h1>Département des Véhicules à Moteur</h1>
+        </header>
+
+        <nav>
+            <ul>
+                <li><a href="/">Accueil</a></li>
+                <li><a href="/conducteur/lister">Conducteurs</a></li>
+                <li><a href="/vehicule/lister">Véhicules</a></li>
+                <li><a href="/equipement/lister">Equipements</a></li>
+                <li><a href="/connexion">Connexion</a></li>
+            </ul>
+        </nav>
+        <main>
+        {% block main %}
+            <section>
+                <h2>Bienvenue sur le site DVM !</h2>
+
+                <p>Nous gérons tous les véhicules ainsi que leurs conducteurs.</p>
+                <p>Un conducteur peut détenir plusieurs véhicules.</p>
+ 
+                <p>Un véhicule possède 0 à plusieurs équipements et un équipement peut
+                appartenir à 0 ou plusieurs véhicules.</p>
+            </section>
+        {% endblock %}
+        </main>
+
+        <footer>
+            <p>Copyright 2024 by Jean-Michel Richer</p>
+        </footer>
+    </body>
+</html>

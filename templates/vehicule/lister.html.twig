@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+ 
+{% block main %}
+    <section>
+    <h2>Véhicules</h2>
+    <nav>
+        <ul>
+            <li><a href="/vehicule/ajouter">[+] Ajouter</a></li>
+            <li><a href="/vehicule/supprimer_tout">[x] Tout Supprimer</a></li>
+        </ul>
+    </nav>
+ 
+    {% if liste_vehicules is empty %}
+        <p>Aucun véhicule trouvé.</p>
+    {% else %}
+    <table>
+        <tr>
+            <th style="width: 50px">Id</th>
+            <th style="width: 150px">Marque</th>
+            <th style="width: 150px">Modèle</th>
+            <th style="width: 150px">Conducteur</th>
+            <th style="width: 50px">Suppr.</th>
+            <th style="width: 50px">Mod.</th>
+           
+        </tr>
+        {% for e in liste_vehicules %}
+            <tr>
+                <td class="center">{{ e.VeId }}</td>
+                <td> {{ e.VeMarque }}</td>
+                <td> {{ e.VeModele }}</td>
+                <td> {{ e.VeConducteur.CoNom }}</td>
+                <td class="center"><img src="{{ asset('images/images/delete.png') }}" alt="delete"
+                    onclick="return vehicule_supprimer({{ e.VeId }}, '{{ e.VeMarque }}', '{{ e.VeModele }}');" /></td>
+                <td class="center"><img src="{{ asset('images/images/modify.png') }}" alt="modify"
+                    onclick="return vehicule_modifier({{ e.VeId }}, '{{ e.VeMarque }}', '{{ e.VeModele }}');" /></td>
+            </tr>
+        {% endfor %}
+    </table>
+    {% endif %}
+    </section>
+{% endblock %}

@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+ 
+{% block main %}
+    <section>
+ 
+    <h2>Conducteurs</h2>
+ 
+    <nav>
+        <ul>
+            <li><a href="/conducteur/ajouter">[+] Ajouter</a></li>
+            <li><a href="/conducteur/supprimer_tout">[x] Tout Supprimer</a></li>
+        </ul>
+    </nav>
+ 
+    {% if liste_conducteurs is empty %}
+        <p>Aucun conducteur trouvé.</p>
+ 
+    {% else %}
+    <table>
+        <tr>
+           
+            <th style="width: 50px">Id</th>
+            <th style="width: 250px">Nom</th>
+            <th style="width: 50px">Suppr.</th>
+            <th style="width: 50px">Mod.</th>
+ 
+        </tr>
+        {% for e in liste_conducteurs %}
+            <tr>
+               
+                <td class="center"> {{ e.CoId }} </td>
+                <td><a href="{{ path('conducteur_vehicules', {id: e.CoId}) }}"> {{ e.CoNom }} </td></a>
+ 
+                <td class="center">
+                    <img src="{{ asset('images/images/delete.png') }}" alt="delete"
+                    onclick="return conducteur_supprimer({{ e.CoId }}, '{{ e.CoNom }}');" />
+                </td>
+                <td class="center">
+                    <img src="{{ asset('images/images/modify.png') }}" alt="modify"
+                    onclick="return conducteur_modifier({{ e.CoId }});" />
+                </td>
+
+               
+            </tr>
+        {% endfor %}
+    </table>
+ 
+    {% endif %}
+ 
+    </section>
+
+   
+
+
+{% endblock %}

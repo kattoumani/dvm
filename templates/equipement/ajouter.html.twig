@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+ 
+{% block main %}
+    <section>
+ 
+    <h2>Ajout d'un équipement</h2>
+ 
+    {{ form_start(form) }}
+    <div style="margin-bottom: 15px;">
+        {{ form_row(form.eqVeEquipement) }}
+    </div>
+
+    <div style="margin-bottom: 15px;">
+        {{ form_row(form.eqve_quantite) }}
+    </div>
+    <button type="submit">Ajouter</button>
+{{ form_end(form) }}
+ 
+{% endblock %}

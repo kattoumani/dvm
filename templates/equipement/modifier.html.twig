@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+ 
+{% block css %}
+    {{ parent() }}
+   
+{% endblock %}
+ 
+{% block main %}
+    <section>
+ 
+    <h2>Modification d'un équipement</h2>
+ 
+    {{ form_start(form) }}
+        {{ form_start(form) }}
+        {{ form_widget(form) }}
+        <button type="submit">Enregistrer</button>
+    {{ form_end(form) }}
+   
+ 
+{% endblock %}

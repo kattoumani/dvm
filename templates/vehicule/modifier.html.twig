@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+ 
+{% block css %}
+    {{ parent() }}
+    <style>
+    div#vehicule_ve_date_help {
+        margin-left: 150px;
+        background: lightgray;
+    }
+    </style>
+{% endblock %}
+ 
+{% block main %}
+    <section>
+ 
+    <h2>Modification d'un véhicule</h2>
+ 
+    {{ form_start(form) }}
+        {{ form_start(form) }}
+        {{ form_widget(form) }}
+        <button type="submit">Enregistrer</button>
+    {{ form_end(form) }}
+   
+ 
+{% endblock %}

@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block main %}
+
+<section>
+
+<h2>Liste des véhicules du conducteur {{conducteur.getCoNom}}</h2>
+
+{% if vehicules is empty %}
+    <p>Aucun vehicules trouvé.</p>
+ 
+{% else %}
+<table>
+    <tr>
+        <th style="width: 120px">Marque</th>
+        <th style="width: 120px">Modèle</th>
+        <th style="width: 120px">Date</th>
+        <th style="width: 120px">Visualiser</th>
+    </tr>
+        {% for v in vehicules %}
+            <tr>
+                <td class="center">{{ v.getVeMarque }}</td>
+                <td class="center">{{ v.getVeModele }}</td>
+                <td class="center">{{ v.getVeDate | date('d/m/Y') }}</td>
+                <td><a href="{{ path('vehicule_liste_equipements', {id: v.getVeId}) }}">Voir</td></a>
+            </tr>
+        {% endfor %}
+</table>
+ 
+{% endif %}
+<p>Prix total des équipements : {{total_equipements}} euros<p>
+
+
+</section>
+
+
+{% endblock %}

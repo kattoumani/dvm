@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+ 
+{% block main %}
+    <section>
+ 
+    <h2>Liste des équipements pour le véhicule {{ marque_vehicule }} {{  modele_vehicule }}</h2>
+ 
+    <nav>
+        <ul>
+            <li><a href="{{ path('equipement_vehicule_ajouter', {id: vehiculeId}) }}">[+] Ajouter</a></td>
+            <li><a href="/equipement/supprimer_tout">[x] Tout Supprimer</a></li>
+        </ul>
+    </nav>
+ 
+    {% if liste_equipements is empty %}
+        <p>Aucun equipement à été trouvé sur ce véhicule.</p>
+ 
+    {% else %}
+    <table>
+        <tr>
+            <th style="width: 120px">Libellé</th>
+            <th style="width: 120px">Prix</th>
+            <th style="width: 50px">Suppr.</th>
+            <th style="width: 50px">Mod.</th> 
+        </tr>
+        {% for eq in liste_equipements %}
+        <tr>
+            <td class="center">{{ eq.EqVeEquipement.EqLibelle }}</td>
+            <td> {{ eq.getEqVeEquipement.getEqPrix }}</td>
+            
+            <td class="center"><img src="{{ asset('images/images/delete.png') }}" alt="delete"
+                onclick="return equipement_supprimer({{ eq.getEqVeEquipement.getEqId }}, '{{ eq.getEqVeEquipement.getEqLibelle }}');" />
+            </td>
+
+            <td class="center">
+                <img src="{{ asset('images/images/modify.png') }}" alt="modify"
+                onclick="return equipement_modifier({{ eq.getEqVeEquipement.getEqId }});" />
+            </td>
+            </tr>
+            
+        {% endfor %}
+    </table>
+ 
+    {% endif %}
+ 
+    </section>
+
+  
+
+{% endblock %}
+
