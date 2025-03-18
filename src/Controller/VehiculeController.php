@@ -2,6 +2,7 @@
  
 namespace App\Controller;
  
+use App\Entity\EquipementVehicule;
 use App\Entity\Vehicule;
 use App\Form\VehiculeType;
 use App\Repository\VehiculeRepository;
@@ -59,7 +60,13 @@ class VehiculeController extends AbstractController
             if (!$vehicule) {
                 throw $this->createNotFoundException('Aucun véhicule avec l\'identifiant ' . $id . ' n\'a été trouvé');
             }
-    
+            
+            $equipementVehicule = $this->entity_manager->getRepository(EquipementVehicule::class)->findBy(['eqve_vehicule' => $vehicule]);
+            
+            foreach($equipementVehicule as $eq){
+                $this->entity_manager->remove($eq);
+            }
+            
             // Suppression du vehicule
             $this->entity_manager->remove($vehicule);
             $this->entity_manager->flush();
@@ -78,7 +85,36 @@ class VehiculeController extends AbstractController
     
             foreach($vehicules as $vehicule) {
                 $this->entity_manager->remove($vehicule);
+                
+                $equipementVehicules = $this->entity_manager->getRepository(EquipementVehicule::class)->findAll();
+                
+                foreach($equipementVehicules as $eq){
+                    $this->entity_manager->remove($eq);
+                }
+                
+                $this->entity_manager->remove($vehicule);
             }
+            
+            
+            /*
+         $conducteurs = $this->repository->findAll();
+          
+        foreach ($conducteurs as $c){
+            $this->entity_manager->remove($c);
+            
+            $vehicules = $this->entity_manager->getRepository(Vehicule::class)->findAll();
+            foreach($vehicules as $v){
+                $equipementVehicules = $this->entity_manager->getRepository(EquipementVehicule::class)->findAll();
+                
+                foreach ($equipementVehicules as $eq) {
+                    $this->entity_manager->remove($eq);
+                }
+                
+                $this->entity_manager->remove($v);
+            }
+            
+        }
+             */
         
             $this->entity_manager->flush();
     

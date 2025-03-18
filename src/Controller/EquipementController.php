@@ -20,6 +20,7 @@ use Symfony\Component\Form\Extension\Core\Type\IntegerType;
  
 // Utilisation d'un logger pour le débogage
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Routing\Requirement\EnumRequirement;
  
 class EquipementController extends AbstractController
 {
@@ -58,9 +59,9 @@ class EquipementController extends AbstractController
     #[Route('/equipement/ajouter', name: 'equipement_ajouter')]
     public function ajouter(Request $request): Response
     {
-        $equipementVehicule = new EquipementVehicule();
+        $equipement = new Equipement();
             
-        $form = $this->createFormBuilder($equipementVehicule)
+        /*$form = $this->createFormBuilder($equipementVehicule)
             ->add('eqVeEquipement', EquipementType::class, [
                 'label' => 'Équipement'
             ]) 
@@ -71,16 +72,16 @@ class EquipementController extends AbstractController
                 'label' => 'Quantité',
                 'required' => true
             ])
-            ->getForm();
+            ->getForm();*/
        
-        $form = $this->createForm(EquipementVehiculeType::class, $equipementVehicule);
+        $form = $this->createForm(EquipementType::class, $equipement);
 
         $form->handleRequest($request);
         
         if ($form->isSubmitted() && $form->isValid()) {
                 
-            $entityManager->persist($equipementVehicule);
-            $entityManager->flush();
+            $this->entity_manager->persist($equipement);
+            $this->entity_manager->flush();
 
             return $this->redirectToRoute('equipement_lister');
         }
@@ -125,31 +126,60 @@ class EquipementController extends AbstractController
     #[Route('/equipement/supprimer/{id}', name: 'equipement_supprimer')]
     public function supprimer($id, EntityManagerInterface $entityManager): Response
     {
-        // à partir du Repository, obtenir le conducteur grâce à son identifiant
+        // à partir du Repository, obtenir l'équipement grâce à son identifiant
         $equipement = $this->repository->find($id);
-        $equipement_vehicule = $entityManager->getRepository(EquipementVehicule::class)->findBy(['eqve_equipement' => $id]);
        
-        // dans le cas où le conducteur n'aurait pas été trouvé, générer une exception
+        // dans le cas où l'équipement n'aurait pas été trouvé, générer une exception
         if (!$equipement) {
             throw $this->createNotFoundException('Aucun équipement d\'identifiant ' . $id . ' n\'a été trouvé');
         }
-       
-        // Suppression du conducteur
+        
+        $equipementVehicule = $this->entity_manager->getRepository(EquipementVehicule::class)->findBy(['eqve_equipement' => $equipement]);
+        
+        foreach ($equipementVehicule as $eqve) {
+            $this->entity_manager->remove($eqve);
+        }
+        
+        // Suppression de l'équipement
         $this->entity_manager->remove($equipement);
-        $this->entity_manager->remove($equipement_vehicule[0]);
+        //$this->entity_manager->remove($equipement_vehicule);
         $this->entity_manager->flush();
  
-        // se rediriger vers l'affichage de la liste des conducteurs
-        // Attention on utilise le nom de la route 'conducteur_lister'
-        // et non 'conducteur/lister'
+        // se rediriger vers l'affichage de la liste des équipements
+        // Attention on utilise le nom de la route 'equipement_lister'
+        // et non 'equipement/lister'
         return $this->redirectToRoute('equipement_lister');
  
+    }
+    
+    /**
+     * Supprimer tous les véhicules (debug/test)
+     */
+    #[Route('/equipement/supprimer_tout', name: 'equipement_supprimer_tout')]
+    public function supprimer_tout(): Response
+    {
+        // Récupérer les vehicules
+        $equipements = $this->repository->findAll();
+        
+        foreach($equipements as $eq) {
+            $equipementsVehicule = $this->entity_manager->getRepository(EquipementVehicule::class)->findAll();
+            foreach ($equipementsVehicule as $eqve){
+                $this->entity_manager->remove($eqve);
+            }
+            
+            $this->entity_manager->remove($eq);
+        }
+        
+        $this->entity_manager->flush();
+        
+        return $this->redirectToRoute('equipement_lister');
     }
 
     #[Route('/equipement/ajouter/{id}', name: 'equipement_vehicule_ajouter')]
     public function equipement_vehicule_ajouter(Request $request,EntityManagerInterface $entityManager ,int $id)
     {
         $vehicule = $entityManager->getRepository(Vehicule::class)->find($id);
+        
 
         if (!$vehicule) {
             throw $this->createNotFoundException('Véhicule non trouvé');
@@ -166,11 +196,12 @@ class EquipementController extends AbstractController
             $entityManager->persist($equipementVehicule->getEqVeEquipement());
             $entityManager->persist($equipementVehicule);
             $entityManager->flush();
+            $this->addFlash('success', "L'équipement a bien été ajouté");
 
-            return $this->redirectToRoute('equipement_lister');
+            return $this->redirectToRoute('vehicule_liste_equipements', ['id' => $id]);
         }
     
-        return $this->render('equipement/ajouter.html.twig', [
+        return $this->render('equipement/vehicule_ajouter.html.twig', [
             'form' => $form->createView(),
         ]);
     }

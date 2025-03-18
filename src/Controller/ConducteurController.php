@@ -48,15 +48,39 @@ class ConducteurController extends AbstractController
     {
         // à partir du Repository, obtenir le conducteur grâce à son identifiant
         $conducteur = $this->repository->find($id);
-       
-        // dans le cas où le conducteur n'aurait pas été trouvé, générer une exception
+                        
         if (!$conducteur) {
-            throw $this->createNotFoundException('Acucun conducteur d\'identifiant ' . $id . ' n\'a été trouvé');
+            // dans le cas où le conducteur n'aurait pas été trouvé, générer une exception
+            throw $this->createNotFoundException('Aucun conducteur d\'identifiant ' . $id . ' n\'a été trouvé');
         }
-       
-        // Suppression du conducteur
+        
+        $vehicule = $this->entity_manager->getRepository(Vehicule::class)->findBy(['ve_conducteur' => $conducteur]);
+        foreach($vehicule as $v){
+            $equipementVehicule = $this->entity_manager->getRepository(EquipementVehicule::class)->findBy(['eqve_vehicule' => $v]);
+            
+            foreach ($equipementVehicule as $eq) {
+                $this->entity_manager->remove($eq);
+            }
+            
+            $this->entity_manager->remove($v);
+        }
+        
+        // Récupération des véhicules et modifier a NULL
+        /*if($vehicule){
+            foreach($vehicule as $v){
+                $v->setVeConducteur(null);
+                $this->entity_manager->persist($v);
+            }
+        }*/
+        
         $this->entity_manager->remove($conducteur);
         $this->entity_manager->flush();
+        
+       
+        
+       
+        // Suppression du conducteur
+        
  
         // se rediriger vers l'affichage de la liste des conducteurs
         // Attention on utilise le nom de la route 'conducteur_lister'
@@ -115,7 +139,7 @@ class ConducteurController extends AbstractController
               $conducteur_existant = $this->repository->findOneBy(['co_nom' => $conducteur->getCoNom()]);
              
               if ($conducteur_existant) {
-         
+                
                   $message_erreur = 'Il existe déjà un conducteur de même nom';
          
               } else {
@@ -184,13 +208,49 @@ class ConducteurController extends AbstractController
       #[Route('/conducteur/supprimer_tout', name: 'conducteur_tout_supprimer')]
       public function supprimerTout(): Response
       {
-        $conducteurs = $this->repository->findAll();
-
-        foreach($conducteurs as $conducteur){
+        
+        
+        
+        /*foreach($conducteurs as $conducteur){
             $this->entity_manager->remove($conducteur);
+            $vehicule = $this->entity_manager->getRepository(Vehicule::class)->findBy(['ve_conducteur' => $conducteur->getCoId()]);
+            if($vehicule){
+                foreach($vehicule as $v){
+                    $v->setVeConducteur(null);
+                    $this->entity_manager->persist($v);
+                }
+            }
+        }*/
+        
+        $conducteurs = $this->repository->findAll();
+          
+        foreach ($conducteurs as $c){
+            $this->entity_manager->remove($c);
+            
+            $vehicules = $this->entity_manager->getRepository(Vehicule::class)->findAll();
+            foreach($vehicules as $v){
+                $equipementVehicules = $this->entity_manager->getRepository(EquipementVehicule::class)->findAll();
+                
+                foreach ($equipementVehicules as $eq) {
+                    $this->entity_manager->remove($eq);
+                }
+                
+                $this->entity_manager->remove($v);
+            }
+            
         }
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         $this->entity_manager->flush();
-
+        
         return $this->redirectToRoute('conducteur_lister');
 
       }
@@ -227,7 +287,6 @@ class ConducteurController extends AbstractController
         $modele_vehicule = $vehicule->getVeModele();
         $nom_conducteur = $vehicule->getVeConducteur()->getCoNom();
         
-
         return $this->render('conducteur/vehicule_liste_equipements.html.twig', [
             'liste_equipements' => $equipement_vehicule,
             'marque_vehicule' => $marque_vehicule,
@@ -236,6 +295,37 @@ class ConducteurController extends AbstractController
             'vehiculeId' => $vehicule->getVeId(),
         ]);
         #dump($equipement_vehicule);
+      }
+      
+      #[Route('/conducteur/liste_conducteurs', name: 'liste_conducteurs')]
+      public function liste_conducteurs(Request $request): Response {
+          $les_conducteurs = $this->repository->findBy([], ['co_nom' => 'ASC']);
+          dump($les_conducteurs);
+          
+          $data = [];
+          
+          foreach($les_conducteurs as $c){
+              $les_vehicules = $this->entity_manager->getRepository(Vehicule::class)->findBy(['ve_conducteur' => $c], ['ve_date' => 'ASC']);
+                
+              $vehiculeData = [];
+              foreach ($les_vehicules as $v){
+                  $les_equipements = $this->entity_manager->getRepository(EquipementVehicule::class)->findBy(['eqve_vehicule' => $v]);  
+             
+                  $vehiculeData[] = [
+                    'vehicule' => $v,
+                    'equipements' => $les_equipements
+                  ]; 
+              }
+            
+            $data[] = [
+                'conducteur' => $c,
+                'vehicules' => $vehiculeData
+            ];
+          }
+                  
+          return $this->render('conducteur/tableau_conducteurs.html.twig', [
+              'data' => $data
+          ]);
       }
     
 }
