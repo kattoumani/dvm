@@ -17,23 +17,23 @@ class EquipementVehicule
 {
     // identifiant
     #[ORM\Id]
-   #[ORM\GeneratedValue]
-   #[ORM\Column(name: 'eqve_id', type: 'integer')]
-   private ?int $eqve_id = null;
- 
+    #[ORM\GeneratedValue]
+    #[ORM\Column(name: 'eqve_id', type: 'integer')]
+    private ?int $eqve_id = null;
+    
     // équipement (ex: pneu neige, 100€)
     #[ORM\ManyToOne(targetEntity: Equipement::class, inversedBy: "eq_equipement_vehicule")]
-   #[ORM\JoinColumn(nullable: false, name: "eqve_equipement_id", referencedColumnName: "eq_id")]
-   private ?Equipement $eqve_equipement = null;
- 
+    #[ORM\JoinColumn(nullable: false, name: "eqve_equipement_id", referencedColumnName: "eq_id")]
+    private ?Equipement $eqve_equipement = null;
+    
     // véhicule (ex: Volkswagen, Touran)
     #[ORM\ManyToOne(targetEntity: Vehicule::class, inversedBy: "ve_equipement_vehicule")]
-   #[ORM\JoinColumn(nullable: false, name: "eqve_vehicule_id", referencedColumnName: "ve_id")]
-   private ?Vehicule $eqve_vehicule = null;
- 
+    #[ORM\JoinColumn(nullable: false, name: "eqve_vehicule_id", referencedColumnName: "ve_id")]
+    private ?Vehicule $eqve_vehicule = null;
+    
     // nombre d'équipements dans le véhicule (ex: 4)
     #[ORM\Column(name: "eqve_quantite", type: "integer")]
-   private ?int $eqve_quantite = null;
+    private ?int $eqve_quantite = null;
  
     function __construct() {
         

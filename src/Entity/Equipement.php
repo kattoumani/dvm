@@ -73,7 +73,7 @@ class Equipement
     }
 
     // retourne les liens EquipementVehicule
-    public function getEqEquipementVehicule(): Collection
+    public function getEqEquipementVehicule(): ?Collection
     {
         return $this->eq_equipement_vehicule;
     }
