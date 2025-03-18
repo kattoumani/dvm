@@ -28,4 +28,4 @@
 .env.test
 
 ###> Migrations ###
-/migrations
+/migrations/*
