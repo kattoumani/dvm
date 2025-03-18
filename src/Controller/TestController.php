@@ -42,18 +42,40 @@ class TestController extends AbstractController
         // création d'un conducteur et renseignement des champs
         $conducteur = new Conducteur();
         $conducteur->SetCoNom("Donald");
- 
+        
+        $c2 = new Conducteur();
+        $c2->setCoNom("Gilbert");
+        
+        $c3 = new Conducteur();
+        $c3->setCoNom("Robert");
+        
         // création d'un véhicule et renseignement des champs
         $vehicule = new Vehicule();
         $vehicule->setVeMarque('Audi');
         $vehicule->setVeModele('Q5');
         $vehicule->setVeDate(new \DateTime('1970-09-30'));
+        
+        // Vehicule 2
+        $v2 = new Vehicule();
+        $v2->setVeMarque('Renault');
+        $v2->setVeModele('Rafale');
+        $v2->setVeDate(new \DateTime('2025-01-14'));
+        
+        // Vehicule 3 
+        $v3 = new Vehicule();
+        $v3->setVeMarque('Volkswagen');
+        $v3->setVeModele('Tiguan');
+        $v3->setVeDate(new \DateTime(),'2021-09-05');
  
         // associer le conducteur au véhicule
         $vehicule->setVeConducteur($conducteur);
+        $v2->setVeConducteur($c2);
+        $v3->setVeConducteur($c3);
  
         // enregistrement conducteur
         $entityManager->persist($conducteur);
+        $entityManager->persist($c2);
+        $entityManager->persist($c3);
        
         // créations des équipements
         $equipement_1 = new Equipement();
@@ -63,6 +85,16 @@ class TestController extends AbstractController
         $equipement_2 = new Equipement();
         $equipement_2->setEqLibelle('Insert bois');
         $equipement_2->setEqPrix(200);
+        
+        // Equipement 3
+        $eq3 = new Equipement();
+        $eq3->setEqLibelle('Tapis de sol');
+        $eq3->setEqPrix(80);
+        
+        // Equipemement 4
+        $eq4 = new Equipement();
+        $eq4->setEqLibelle('Câble de recharge');
+        $eq4->setEqPrix(35);
  
         // création d'un association entre équipement 1 et véhicule
         $equip_vehi_1 = new EquipementVehicule();
@@ -75,24 +107,47 @@ class TestController extends AbstractController
         $equip_vehi_2->setEqVeVehicule($vehicule);
         $equip_vehi_2->setEqVeEquipement($equipement_2);
         $equip_vehi_2->setEqVeQuantite(1);
+        
+        // Equipement 3
+        $eq_ve3 = new EquipementVehicule();
+        $eq_ve3->setEqVeVehicule($v2);
+        $eq_ve3->setEqVeEquipement($eq3);
+        $eq_ve3->setEqVeQuantite(4);
+        
+        // Equipement 4
+        $eq_ve4 = new EquipementVehicule();
+        $eq_ve4->setEqVeVehicule($v3);
+        $eq_ve4->setEqVeEquipement($eq4);
+        $eq_ve4->setEqVeQuantite(1);
        
         // mise en relation équipements et véhicules
         $vehicule->addVeEquipementVehicule($equip_vehi_1);
         $vehicule->addVeEquipementVehicule($equip_vehi_2);
+        $v2->addVeEquipementVehicule($eq_ve3);
+        $v3->addVeEquipementVehicule($eq_ve4);
+        
        
         $equipement_1->addEqEquipementVehicule($equip_vehi_1);
         $equipement_2->addEqEquipementVehicule($equip_vehi_2);
+        $eq3->addEqEquipementVehicule($eq_ve3);
+        $eq4->addEqEquipementVehicule($eq_ve4);
  
         // enregistrement des équipements
         $entityManager->persist($equipement_1);
         $entityManager->persist($equipement_2);
- 
+        $entityManager->persist($eq3);
+        $entityManager->persist($eq4);
+        
         // enregistrement des associations équipements/véhicule
         $entityManager->persist($equip_vehi_1);
         $entityManager->persist($equip_vehi_2);
+        $entityManager->persist($eq_ve3);
+        $entityManager->persist($eq_ve4);
        
         // enregistrement du véhicule
         $entityManager->persist($vehicule);
+        $entityManager->persist($v2);
+        $entityManager->persist($v3);
         $entityManager->flush();
  
  
