@@ -45,6 +45,18 @@ class ConducteurRepository extends ServiceEntityRepository
  
     // Ajoutez ici d'autres méthodes personnalisées si nécessaire
     //...
+    
+    /**
+     * Recherche les conducteurs par nom
+     */
+    public function findBySearch(string $searchTerm)
+    {
+        return $this->createQueryBuilder('c')
+        ->andWhere('c.co_nom LIKE :searchTerm')
+        ->setParameter('searchTerm', '%' . $searchTerm . '%') // Recherche partielle
+        ->getQuery()
+        ->getResult();
+    }
 }
  
 ?>

@@ -101,9 +101,22 @@ class ConducteurController extends AbstractController
         // obtenir la liste de tous les conducteurs triés par ordre alphabétique
         // croissant
         $liste_conducteurs = $this->repository->findAllOrderedByName();
+        
+        // Récupérer le terme de recherche de la requête
+        $searchTerm = $request->query->get('search', '');
+        
+        // Si un terme de recherche est fourni, filtrer les conducteurs
+        if ($searchTerm) {
+            // Utiliser la méthode findBySearch() pour rechercher les conducteurs par nom
+            $liste_conducteurs = $this->repository->findBySearch($searchTerm);
+        } else {
+            // Si pas de recherche, retourner tous les conducteurs
+            $liste_conducteurs = $this->repository->findAllOrderedByName();
+        }
        
         return $this->render("conducteur/lister.html.twig", [
-            'liste_conducteurs' => $liste_conducteurs
+            'liste_conducteurs' => $liste_conducteurs,
+            'searchTerm' => $searchTerm,  // Passer le terme de recherche à la vue
         ]);
     }
 

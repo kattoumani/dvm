@@ -9,9 +9,18 @@
         <ul>
             <li><a href="/conducteur/ajouter">[+] Ajouter</a></li>
             <li><a href="/conducteur/supprimer_tout">[x] Tout Supprimer</a></li>
+            <li><a href="/conducteur/liste_conducteurs">Tableau des conducteurs</a></li>
         </ul>
     </nav>
-    <a href="/conducteur/liste_conducteurs">Tableau - Les conducteurs</a>
+    
+    
+     <!-- Formulaire de recherche -->
+    <div class="search-wrapper">
+        <form method="get" action="{{ path('conducteur_lister') }}" class="search-form">
+            <input type="text" name="search" placeholder="Rechercher un conducteur..." value="{{ searchTerm }}" class="search-input"/>
+            <button type="submit" class="search-button">🔍</button>
+        </form>
+    </div>
  
     {% if liste_conducteurs is empty %}
         <p>Aucun conducteur trouvé.</p>
