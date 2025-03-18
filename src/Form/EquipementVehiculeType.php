@@ -16,7 +16,8 @@ class EquipementVehiculeType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('eqVeEquipement', EquipementType::class) // formulaire imbriqué pour l'équipement
+            ->add('eqVeEquipement', EquipementType::class,
+                ['label' => 'Equipement'])
             ->add('eqve_quantite', IntegerType::class, [
                 'label' => 'Quantité',
                 'required' => true

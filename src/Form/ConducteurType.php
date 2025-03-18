@@ -46,50 +46,6 @@ class ConducteurType extends AbstractType
         $resolver->setDefaults([
             'data_class' => Conducteur::class
         ]);
-    }
-
-        //...
-   /**
-     * Modifier un conducteur étant donné son id
-     */
-    #[Route('/conducteur/modifier/{id}', name: 'conducteur_modifier')]
-   public function modifier(Request $request, EntityManagerInterface $entityManager, int $id): Response
-    {
- 
-        // à partir du Repository, obtenir le conducteur grâce à son identifiant
-        $conducteur = $this->repository->find($id);
-       
-        // dans le cas où le conducteur n'aurait pas été trouvé, générer une exception
-        if (!$conducteur) {
-            throw $this->createNotFoundException('Acucun conducteur d\'identifiant ' . $id . ' n\'a été trouvé');
-        }
- 
-        // créer le formulaire lié au conducteur
-        $form = $this->createForm(ConducteurType::class, $conducteur);
- 
-        // récupération des données de la requête, notamment des
-        // informations liées à la saisie d'un conducteur
-        $form->handleRequest($request);
- 
-        // Si on vient de soumettre le formulaire et que les données
-        // sont valies
-        if ($form->isSubmitted() && $form->isValid()) {
- 
-            // alors sauvegarder le conducteur (persist, flush)
-            $this->repository->save($conducteur, true);
- 
-            // se rediriger vers l'affichage de la liste des conducteurs
-            // Attnetion on utilise le nom de la route 'conducteur_lister'
-            // et non 'conducteur/lister'
-            return $this->redirectToRoute('conducteur_lister');
-        }
- 
-        // sinon afficher la page contenant le formulaire de modification
-        return $this->render('conducteur/modifier.html.twig', [
-            'form' => $form->createView(),
-        ]);
- 
-    }
- 
+    } 
 }
 ?>
