@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+ 
+{% block main %}
+    <section>
+ 
+    <h2>Ajout d'un équipement</h2>
+ 
+    {{ form_start(form) }}
+        {{ form_row(form.eq_libelle) }}
+        {{ form_row(form.eq_prix) }}
+        <button type="submit">Ajouter</button>
+    {{ form_end(form) }}
+ 
+{% endblock %}

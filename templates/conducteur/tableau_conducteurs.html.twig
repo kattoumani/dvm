@@ -1,0 +1,57 @@
+{% extends     'base.html.twig' %}
+
+{% block main %}
+
+<section>
+
+<h1>Tableau synthétique des conducteurs</h1>
+<table class="table">
+	<thead>
+    	<tr>
+			<th scope="col">Conducteurs</th>
+         	<th scope="col">Véhicules</th>
+          	<th scope="col">Prix</th>
+        </tr>
+	</thead>
+	<tbody>
+        {% set grandTotal = 0 %}
+        
+                {% for item in data %}
+                    {% set firstRow = true %}
+                    {% if item.vehicules is not empty %}
+                        {% for vehiculeData in item.vehicules %}
+                            {% set totalPrix = 0 %}
+                            {% for equipement in vehiculeData.equipements %}
+                                {% set totalPrix = totalPrix + equipement.eqVeEquipement.eqPrix %}
+                            {% endfor %}
+                            {% set grandTotal = grandTotal + totalPrix %}
+                            <tr>
+                                {# Nom du conducteur seulement à la première ligne #}
+                                {% if firstRow %}
+                                    <td rowspan="{{ item.vehicules|length }}">{{ item.conducteur.coNom }}</td>
+                                    {% set firstRow = false %}
+                                {% endif %}
+                                <td>{{ vehiculeData.vehicule.veMarque }}, {{ vehiculeData.vehicule.veModele }}</td>
+                                <td>{{ totalPrix }} €</td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td>{{ item.conducteur.coNom }}</td>
+                            <td>Pas de véhicule</td>
+                            <td>0 €</td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+        
+                <!-- Total général -->
+                <tr>
+                    <td colspan="2" style="text-align: right;"><strong>Total</strong></td>
+                    <td><strong>{{ grandTotal }} €</strong></td>
+                </tr>
+	</tbody>
+</table>
+	
+</section>
+
+{% endblock %}

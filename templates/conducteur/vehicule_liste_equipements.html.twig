@@ -2,8 +2,15 @@
  
 {% block main %}
     <section>
+    {% for label, messages in app.flashes %}
+        <div class="alert alert-success" role="alert">
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+        </div>
+    {% endfor %}
  
-    <h2>Liste des équipements pour le véhicule {{ marque_vehicule }} {{  modele_vehicule }}</h2>
+    <h2>Liste des équipements pour le véhicule : {{ marque_vehicule }} {{  modele_vehicule }}</h2>
  
     <nav>
         <ul>

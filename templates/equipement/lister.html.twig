@@ -18,19 +18,16 @@
     {% else %}
     <table>
         <tr>
-           
-            <th style="width: 50px">Id</th>
             <th style="width: 250px">Nom</th>
+            <th style="width: 250px">Prix (euros)</th>
             <th style="width: 50px">Suppr.</th>
             <th style="width: 50px">Mod.</th>
  
         </tr>
         {% for e in liste_equipements %}
             <tr>
-               
-                <td class="center"> {{ e.eqid }} </td>
                 <td> {{ e.eqlibelle }} </td>
- 
+ 				<td> {{ e.eqprix }} </td>
                 <td class="center">
                     <img src="{{ asset('images/images/delete.png') }}" alt="delete"
                     onclick="return equipement_supprimer({{ e.eqid }}, '{{ e.eqlibelle }}');" />

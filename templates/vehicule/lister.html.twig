@@ -15,20 +15,26 @@
     {% else %}
     <table>
         <tr>
-            <th style="width: 50px">Id</th>
-            <th style="width: 150px">Marque</th>
-            <th style="width: 150px">Modèle</th>
-            <th style="width: 150px">Conducteur</th>
+            <th style="width: 250px">Marque</th>
+            <th style="width: 250px">Modèle</th>
+			<th style="width: 250px">Date d'acquisition</th>
+            <th style="width: 250px">Conducteur</th>
             <th style="width: 50px">Suppr.</th>
             <th style="width: 50px">Mod.</th>
            
         </tr>
         {% for e in liste_vehicules %}
             <tr>
-                <td class="center">{{ e.VeId }}</td>
                 <td> {{ e.VeMarque }}</td>
                 <td> {{ e.VeModele }}</td>
-                <td> {{ e.VeConducteur.CoNom }}</td>
+                <td> {{ e.VeDate | date('d/m/Y') }} </td>
+            {% if e.veConducteur is not null %}
+    			<td> {{ e.VeConducteur.CoNom }}</td>
+            {% else %}
+                <td>Pas de conducteur</td>
+            {% endif %}
+            
+                
                 <td class="center"><img src="{{ asset('images/images/delete.png') }}" alt="delete"
                     onclick="return vehicule_supprimer({{ e.VeId }}, '{{ e.VeMarque }}', '{{ e.VeModele }}');" /></td>
                 <td class="center"><img src="{{ asset('images/images/modify.png') }}" alt="modify"

@@ -20,6 +20,14 @@
         {{ form_widget(form) }}
         <button type="submit">Ajouter</button>
     {{ form_end(form) }}
+    
+    {% if message_erreur != "" %}
+    <div class="alert alert-danger" role="alert">
+        {{ message_erreur }}
+    </div>
+    
+    {% endif %}
+    
    
  
 {% endblock %}
